@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.pilot.voiceassistant'
+    compileSdk 34
+    ndkVersion '24.0.8215888'
+
+    defaultConfig {
+        applicationId 'com.pilot.voiceassistant'
+        minSdk 34
+        targetSdk 34
+        versionCode 1
+        versionName '0.1.0'
+
+        externalNativeBuild {
+            cmake {
+                // Optimized in debug builds too: unoptimized, the LLM is many times slower.
+                arguments '-DCMAKE_BUILD_TYPE=Release', '-DANDROID_STL=c++_static'
+                targets 'assistant_llm'
+            }
+        }
+
+        ndk {
+            // 64-bit only (board and emulator): each extra ABI adds about 40 MB of engines.
+            abiFilters 'arm64-v8a', 'x86_64'
+        }
+    }
+
+    externalNativeBuild {
+        // The LLM engine: llama.cpp with a small JNI layer.
+        cmake {
+            path 'src/main/cpp/CMakeLists.txt'
+            version '3.18.1'
+        }
+    }
+
+    packagingOptions {
+        // Both native libraries ship a libonnxruntime.so for 32-bit x86 only.
+        jniLibs.excludes += 'lib/x86/**'
+    }
+
+    androidResources {
+        // The models are loaded straight from the APK.
+        noCompress 'onnx'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    lint {
+        abortOnError true
+        checkTestSources true
+    }
+
+    testOptions {
+        // android.util.Log does nothing in JVM unit tests instead of throwing.
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    // Runs the openWakeWord models. The plain artifact carries the desktop natives for unit tests.
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.23.2'
+    testImplementation 'com.microsoft.onnxruntime:onnxruntime:1.23.2'
+    // Runs the speech-to-text model. From the sherpa-onnx GitHub release; it carries its own
+    // ONNX Runtime inside libsherpa-onnx-jni.so and its classes are written in Kotlin.
+    implementation files('libs/sherpa-onnx-static-link-onnxruntime-1.13.8.aar')
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+    testImplementation 'junit:junit:4.13.2'
+}

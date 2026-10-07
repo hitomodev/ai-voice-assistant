@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="wake_hint">#FF9E9E9E</color>
+    <color name="wake_detected">#FF4CD964</color>
+</resources>

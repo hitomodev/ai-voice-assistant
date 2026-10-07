@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Voice Assistant</string>
+    <string name="talk_button">Talk</string>
+    <string name="state_connecting">Connecting…</string>
+    <string name="state_standby">Standby</string>
+    <string name="state_listening">Listening…</string>
+    <string name="state_thinking">Thinking…</string>
+    <string name="state_speaking">Speaking…</string>
+    <string name="wake_hint">Say “Hey Bro” or tap Talk</string>
+    <string name="wake_detected">● Woken up by “Hey Bro”</string>
+    <string name="label_you">You</string>
+    <string name="label_assistant">Assistant</string>
+    <string name="mic_permission_needed">Microphone permission is required. Grant it in Settings and reopen the app.</string>
+    <string name="error_prefix">Error: %1$s</string>
+    <string name="notification_channel">Voice assistant</string>
+    <string name="notification_text">Voice assistant is running</string>
+</resources>
