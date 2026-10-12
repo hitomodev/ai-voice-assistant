@@ -32,6 +32,7 @@ public final class MainActivity extends Activity implements VoiceAssistantServic
     private TextView transcriptText;
     private TextView responseText;
     private Button talkButton;
+    private VoiceOrbView orbView;
 
     private VoiceAssistantService service;
     private boolean bound;
@@ -62,6 +63,8 @@ public final class MainActivity extends Activity implements VoiceAssistantServic
         transcriptText = findViewById(R.id.transcript_text);
         responseText = findViewById(R.id.response_text);
         talkButton = findViewById(R.id.talk_button);
+        orbView = findViewById(R.id.orb_view);
+        findViewById(R.id.back_button).setOnClickListener(v -> finish());
         talkButton.setOnClickListener(v -> {
             if (service != null) {
                 service.onTrigger(TriggerSource.UI_BUTTON);
@@ -134,6 +137,7 @@ public final class MainActivity extends Activity implements VoiceAssistantServic
 
     @Override
     public void onStateChanged(AssistantState state) {
+        orbView.setState(state);
         switch (state) {
             case STANDBY:
                 stateText.setText(R.string.state_standby);

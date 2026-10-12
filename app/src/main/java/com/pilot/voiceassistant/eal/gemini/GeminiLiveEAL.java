@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.UnknownHostException;
 import java.util.ArrayDeque;
 import java.util.Base64;
 import java.util.List;
@@ -253,9 +254,14 @@ public final class GeminiLiveEAL implements LiveEAL {
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            fail(response != null
-                    ? "connection refused (HTTP " + response.code() + ")"
-                    : "connection failed: " + t);
+            Log.e(TAG, "WebSocket failed", t);
+            if (response != null) {
+                fail("connection refused (HTTP " + response.code() + ")");
+            } else if (t instanceof UnknownHostException) {
+                fail("no internet connection");
+            } else {
+                fail("connection failed: " + t.getMessage());
+            }
         }
 
         private void fail(String reason) {

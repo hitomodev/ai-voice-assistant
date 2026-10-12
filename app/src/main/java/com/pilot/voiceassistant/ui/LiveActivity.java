@@ -33,6 +33,7 @@ public final class LiveActivity extends Activity implements LiveAssistantService
     private TextView transcriptText;
     private TextView responseText;
     private Button talkButton;
+    private VoiceOrbView orbView;
 
     private LiveAssistantService service;
     private boolean bound;
@@ -63,6 +64,9 @@ public final class LiveActivity extends Activity implements LiveAssistantService
         transcriptText = findViewById(R.id.transcript_text);
         responseText = findViewById(R.id.response_text);
         talkButton = findViewById(R.id.talk_button);
+        orbView = findViewById(R.id.orb_view);
+        ((TextView) findViewById(R.id.mode_text)).setText(R.string.mode_modern);
+        findViewById(R.id.back_button).setOnClickListener(v -> finish());
         talkButton.setOnClickListener(v -> {
             if (service != null) {
                 service.onTrigger(TriggerSource.UI_BUTTON);
@@ -136,8 +140,10 @@ public final class LiveActivity extends Activity implements LiveAssistantService
     /** In a conversation the button ends it. */
     @Override
     public void onStateChanged(AssistantState state) {
-        talkButton.setText(state == AssistantState.STANDBY
-                ? R.string.talk_button : R.string.stop_button);
+        orbView.setState(state);
+        boolean talking = state != AssistantState.STANDBY;
+        talkButton.setText(talking ? R.string.stop_button : R.string.talk_button);
+        talkButton.setActivated(talking);
         switch (state) {
             case STANDBY:
                 stateText.setText(R.string.state_standby);

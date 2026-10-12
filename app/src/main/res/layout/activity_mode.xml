@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="32dp">
@@ -9,35 +10,71 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mode_title"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/app_name"
+        android:textColor="@color/text_primary"
         android:textSize="40sp" />
 
-    <Button
-        android:id="@+id/tradition_button"
-        android:layout_width="320dp"
-        android:layout_height="96dp"
+    <TextView
+        style="@style/HintText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/mode_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="@string/mode_tradition"
-        android:textSize="28sp" />
+        android:baselineAligned="false"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mode_tradition_hint"
-        android:textSize="18sp" />
+        <LinearLayout
+            android:id="@+id/tradition_button"
+            style="@style/ModeCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/modern_button"
-        android:layout_width="320dp"
-        android:layout_height="96dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/mode_modern"
-        android:textSize="28sp" />
+            <ImageView
+                style="@style/ModeIcon"
+                android:src="@drawable/ic_device" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mode_modern_hint"
-        android:textSize="18sp" />
+            <TextView
+                style="@style/ModeTitle"
+                android:text="@string/mode_tradition" />
+
+            <TextView
+                style="@style/ModeHint"
+                android:text="@string/mode_tradition_hint" />
+
+            <TextView
+                style="@style/ModeTag"
+                android:text="@string/mode_tradition_tag" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/modern_button"
+            style="@style/ModeCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                style="@style/ModeIcon"
+                android:src="@drawable/ic_cloud" />
+
+            <TextView
+                style="@style/ModeTitle"
+                android:text="@string/mode_modern" />
+
+            <TextView
+                style="@style/ModeHint"
+                android:text="@string/mode_modern_hint" />
+
+            <TextView
+                style="@style/ModeTag"
+                android:text="@string/mode_modern_tag" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="wake_hint">#FF9E9E9E</color>
-    <color name="wake_detected">#FF4CD964</color>
+    <color name="background">#FF0B0F14</color>
+    <color name="surface">#FF161C25</color>
+    <color name="surface_pressed">#FF222B38</color>
+    <color name="outline">#FF2A3442</color>
+    <color name="text_primary">#FFF2F5F8</color>
+    <color name="text_secondary">#FF8B96A5</color>
+    <color name="accent">#FF5B8DEF</color>
+    <color name="accent_soft">#335B8DEF</color>
+    <color name="error">#FFFF6B6B</color>
+    <color name="error_soft">#33FF6B6B</color>
+    <!-- One colour per assistant state, shared by the orb and the state line. -->
+    <color name="state_standby">#FF3A4656</color>
+    <color name="state_listening">#FF34D399</color>
+    <color name="state_thinking">#FFF5B94A</color>
+    <color name="state_speaking">#FF5B8DEF</color>
+    <color name="wake_hint">#FF8B96A5</color>
+    <color name="wake_detected">#FF34D399</color>
 </resources>
