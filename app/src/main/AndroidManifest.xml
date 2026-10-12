@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- The Modern mode talks to Gemini Live. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -19,14 +21,32 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
 
+        <!-- AAOS: distractionOptimized keeps an activity usable while the vehicle is moving. -->
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.ModeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- AAOS: keep the activity usable while the vehicle is moving. -->
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
+        </activity>
+
+        <!-- Tradition: every engine runs on the device. -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false">
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
+        </activity>
+
+        <!-- Modern: the conversation runs in Gemini Live. -->
+        <activity
+            android:name=".ui.LiveActivity"
+            android:exported="false">
             <meta-data
                 android:name="distractionOptimized"
                 android:value="true" />
@@ -34,6 +54,11 @@
 
         <service
             android:name=".service.VoiceAssistantService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
+        <service
+            android:name=".service.LiveAssistantService"
             android:exported="false"
             android:foregroundServiceType="microphone" />
     </application>

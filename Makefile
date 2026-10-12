@@ -1,0 +1,2 @@
+run: 
+	./gradlew assembleDebug && adb install -r app/build/outputs/apk/debug/app-debug.apk && adb logcat -s VoiceAssistantService OpenWakeWordEAL AndroidMicHAL AndroidAudioHAL SherpaSTTEAL SherpaTTSEAL LlamaLLMEAL LiveAssistantService GeminiLiveEAL AndroidBoardControlHAL Hitle

@@ -25,4 +25,6 @@ public interface BoardControlHAL {
     boolean media(MediaCommand command);
 
     boolean setRadioOn(boolean on);
+
+    String currentTime();
 }

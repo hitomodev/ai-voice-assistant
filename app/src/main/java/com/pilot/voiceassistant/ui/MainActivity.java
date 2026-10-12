@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.pilot.voiceassistant.R;
 import com.pilot.voiceassistant.core.AssistantState;
 import com.pilot.voiceassistant.core.TriggerSource;
+import com.pilot.voiceassistant.service.LiveAssistantService;
 import com.pilot.voiceassistant.service.VoiceAssistantService;
 
 /**
@@ -122,6 +123,8 @@ public final class MainActivity extends Activity implements VoiceAssistantServic
             return;
         }
         errorText.setText("");
+        // The two assistants listen for the same wake word, so only one may run.
+        stopService(new Intent(this, LiveAssistantService.class));
         Intent intent = new Intent(this, VoiceAssistantService.class);
         startForegroundService(intent);
         bound = bindService(intent, connection, Context.BIND_AUTO_CREATE);

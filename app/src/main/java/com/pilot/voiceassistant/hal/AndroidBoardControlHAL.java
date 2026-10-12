@@ -4,6 +4,9 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * {@link BoardControlHAL} on the standard Android audio and media-key APIs, which work on a phone
@@ -82,5 +85,16 @@ public final class AndroidBoardControlHAL implements BoardControlHAL {
                 + audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) + "/"
                 + audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         return true;
+    }
+    
+    @Override
+    public String currentTime(){
+        LocalTime now = LocalTime.now();
+        // Format as "h:mm a" (e.g., "3:45 PM") or word-friendly layout
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault());
+        String formattedTime = now.format(formatter);
+        
+        // Convert to a spoken-friendly string
+        return "The current time is " + formattedTime;
     }
 }

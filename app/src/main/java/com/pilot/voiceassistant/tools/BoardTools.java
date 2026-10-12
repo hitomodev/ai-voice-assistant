@@ -37,7 +37,7 @@ public final class BoardTools {
                         "Pauses or stops the music.",
                         () -> said(board.media(MediaCommand.PAUSE), "Music paused.")),
                 new Tool("next_track",
-                        "Skips to the next song or track.",
+                        "Goes to the next song or track.",
                         () -> said(board.media(MediaCommand.NEXT), "Next song.")),
                 new Tool("previous_track",
                         "Goes back to the previous or last song or track.",
@@ -47,7 +47,13 @@ public final class BoardTools {
                         () -> said(board.setRadioOn(true), "Radio on.")),
                 new Tool("radio_off",
                         "Turns the radio off.",
-                        () -> said(board.setRadioOn(false), "Radio off.")));
+                        () -> said(board.setRadioOn(false), "Radio off.")),
+                new Tool("get_current_time",
+                        "Gets the current time. Use when the user asks for the time or the hour.",
+                        () -> {
+                            String time = board.currentTime();
+                            return said(!time.isEmpty(), time);
+                        }));
     }
 
     private static String said(boolean done, String confirmation) {

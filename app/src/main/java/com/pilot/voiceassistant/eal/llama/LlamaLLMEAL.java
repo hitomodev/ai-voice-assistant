@@ -147,10 +147,12 @@ public final class LlamaLLMEAL implements LLMEAL {
         Log.i(TAG, "\"" + request + "\" -> " + output + " ("
                 + (System.nanoTime() - startNanos) / 1_000_000 + " ms)");
         // Checked again: a cancelled request must not run its tool.
+        Log.i(TAG, "HITLE current: " + current);
         if (current != generation.get()) {
             return;
         }
         String reply = runCalledTool(FunctionGemma.parseCalledFunction(output));
+        Log.i("HITLE", "reply "+ reply);
         callback.onTextChunk(reply);
         callback.onComplete();
     }

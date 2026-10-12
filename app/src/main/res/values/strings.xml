@@ -2,6 +2,12 @@
 <resources>
     <string name="app_name">Voice Assistant</string>
     <string name="talk_button">Talk</string>
+    <string name="stop_button">Stop</string>
+    <string name="mode_title">Choose the assistant</string>
+    <string name="mode_tradition">Tradition</string>
+    <string name="mode_tradition_hint">Everything runs on the device</string>
+    <string name="mode_modern">Modern</string>
+    <string name="mode_modern_hint">Conversation with Gemini Live</string>
     <string name="state_connecting">Connecting…</string>
     <string name="state_standby">Standby</string>
     <string name="state_listening">Listening…</string>

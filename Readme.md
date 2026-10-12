@@ -1,5 +1,3 @@
-y
-
 # AI Voice Assistant (AAOS pilot)
 
 Pilot voice assistant for a custom Android Automotive OS board (Android 14, API 34), written in Java.
@@ -30,7 +28,7 @@ Needs JDK 17 or newer and the Android SDK (platform 34). `local.properties` poin
 
 ```bash
 adb install -r app/build/outputs/apk/debug/app-debug.apk
-adb logcat -s VoiceAssistantService OpenWakeWordEAL AndroidMicHAL AndroidAudioHAL
+adb logcat -s VoiceAssistantService OpenWakeWordEAL AndroidMicHAL AndroidAudioHAL``
 ```
 
 1. Open **Voice Assistant** and grant the microphone permission. The screen shows **Standby**.
@@ -52,6 +50,30 @@ adb shell appops set com.pilot.voiceassistant TURN_SCREEN_ON allow
 
 If it stays in Listening for 8 seconds and returns to Standby, no audio is arriving from the
 microphone. Errors are shown in red on the screen and logged.
+
+## Tradition and Modern
+
+The app opens on a screen with two buttons:
+
+| Mode | What runs |
+|---|---|
+| **Tradition** | The flow above: every engine runs on the device (`MainActivity`, `VoiceAssistantService`) |
+| **Modern** | Same wake word and board tools; Gemini Live replaces STT, LLM and TTS (`LiveActivity`, `LiveAssistantService`) |
+
+Modern needs internet and a Gemini API key in `local.properties` (not in git), then a rebuild:
+
+```properties
+GEMINI_API_KEY=your-key
+```
+
+"Hey Bro" or **Talk** opens a conversation. It goes back and forth without the wake word: speak
+after each two-note tone. The microphone is not sent while the assistant speaks. The conversation
+ends after 10 seconds of silence or on **Stop**, and the assistant answers in the language you
+speak. The model and the instruction are in `GeminiLiveEAL`.
+
+```bash
+adb logcat -s LiveAssistantService GeminiLiveEAL OpenWakeWordEAL AndroidBoardControlHAL
+```
 
 ## Wake word
 

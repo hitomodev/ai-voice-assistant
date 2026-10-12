@@ -30,6 +30,7 @@ public final class AndroidAudioHAL implements AudioHAL {
     private static final int CUE_FADE_MS = 10;
     private static final double CUE_AMPLITUDE = 0.3;
 
+    private final int sampleRateHz;
     private final AudioManager audioManager;
     private final AudioAttributes attributes;
     private final AudioFocusRequest focusRequest;
@@ -40,7 +41,16 @@ public final class AndroidAudioHAL implements AudioHAL {
     /** Created on first use and then replayed. */
     private AudioTrack cueTrack;
 
+    /** Plays at the sample rate of the TTS voice. */
     public AndroidAudioHAL(Context context) {
+        this(context, AudioConfig.PLAYBACK_SAMPLE_RATE_HZ);
+    }
+
+    /**
+     * @param sampleRateHz the sample rate of the buffers given to {@link #playAudioBuffer}
+     */
+    public AndroidAudioHAL(Context context, int sampleRateHz) {
+        this.sampleRateHz = sampleRateHz;
         audioManager = context.getSystemService(AudioManager.class);
         attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANT)
@@ -137,7 +147,7 @@ public final class AndroidAudioHAL implements AudioHAL {
         AudioTrack t = new AudioTrack.Builder()
                 .setAudioAttributes(attributes)
                 .setAudioFormat(new AudioFormat.Builder()
-                        .setSampleRate(AudioConfig.PLAYBACK_SAMPLE_RATE_HZ)
+                        .setSampleRate(sampleRateHz)
                         .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
                         .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
                         .build())
@@ -149,12 +159,12 @@ public final class AndroidAudioHAL implements AudioHAL {
     }
 
     /** Each note fades in and out, so that it does not click. */
-    private static short[] buildCue() {
-        int noteSamples = AudioConfig.PLAYBACK_SAMPLE_RATE_HZ * CUE_NOTE_MS / 1000;
-        int fadeSamples = AudioConfig.PLAYBACK_SAMPLE_RATE_HZ * CUE_FADE_MS / 1000;
+    private short[] buildCue() {
+        int noteSamples = sampleRateHz * CUE_NOTE_MS / 1000;
+        int fadeSamples = sampleRateHz * CUE_FADE_MS / 1000;
         short[] pcm = new short[noteSamples * CUE_NOTES_HZ.length];
         for (int note = 0; note < CUE_NOTES_HZ.length; note++) {
-            double step = 2 * Math.PI * CUE_NOTES_HZ[note] / AudioConfig.PLAYBACK_SAMPLE_RATE_HZ;
+            double step = 2 * Math.PI * CUE_NOTES_HZ[note] / sampleRateHz;
             for (int i = 0; i < noteSamples; i++) {
                 double fade = Math.min(1.0,
                         Math.min(i, noteSamples - 1 - i) / (double) fadeSamples);
@@ -264,7 +274,7 @@ public final class AndroidAudioHAL implements AudioHAL {
         }
 
         private AudioTrack createTrack() {
-            int minBufferBytes = AudioTrack.getMinBufferSize(AudioConfig.PLAYBACK_SAMPLE_RATE_HZ,
+            int minBufferBytes = AudioTrack.getMinBufferSize(sampleRateHz,
                     AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
             if (minBufferBytes <= 0) {
                 throw new IllegalStateException(
@@ -273,7 +283,7 @@ public final class AndroidAudioHAL implements AudioHAL {
             return new AudioTrack.Builder()
                     .setAudioAttributes(attributes)
                     .setAudioFormat(new AudioFormat.Builder()
-                            .setSampleRate(AudioConfig.PLAYBACK_SAMPLE_RATE_HZ)
+                            .setSampleRate(sampleRateHz)
                             .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
                             .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
                             .build())
@@ -286,7 +296,7 @@ public final class AndroidAudioHAL implements AudioHAL {
         private void drain(AudioTrack t, long writtenFrames) throws InterruptedException {
             long remainingFrames = writtenFrames - (t.getPlaybackHeadPosition() & 0xFFFFFFFFL);
             long deadline = SystemClock.elapsedRealtime()
-                    + remainingFrames * 1000 / AudioConfig.PLAYBACK_SAMPLE_RATE_HZ + DRAIN_SLACK_MS;
+                    + remainingFrames * 1000 / sampleRateHz + DRAIN_SLACK_MS;
             while (!cancelled
                     && (t.getPlaybackHeadPosition() & 0xFFFFFFFFL) < writtenFrames
                     && SystemClock.elapsedRealtime() < deadline) {

@@ -2,6 +2,13 @@ plugins {
     id 'com.android.application'
 }
 
+// Secrets of this machine: the Gemini API key of the Modern mode.
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+
 android {
     namespace 'com.pilot.voiceassistant'
     compileSdk 34
@@ -13,6 +20,9 @@ android {
         targetSdk 34
         versionCode 1
         versionName '0.1.0'
+
+        buildConfigField 'String', 'GEMINI_API_KEY',
+                "\"${localProperties.getProperty('GEMINI_API_KEY', '').trim()}\""
 
         externalNativeBuild {
             cmake {
@@ -34,6 +44,10 @@ android {
             path 'src/main/cpp/CMakeLists.txt'
             version '3.18.1'
         }
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     packagingOptions {
@@ -76,5 +90,7 @@ dependencies {
     // ONNX Runtime inside libsherpa-onnx-jni.so and its classes are written in Kotlin.
     implementation files('libs/sherpa-onnx-static-link-onnxruntime-1.13.8.aar')
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+    // The WebSocket of the Gemini Live API.
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     testImplementation 'junit:junit:4.13.2'
 }
